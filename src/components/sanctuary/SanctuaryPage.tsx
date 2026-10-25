@@ -287,6 +287,16 @@ export default function SanctuaryPage() {
               )}
             </div>
             <div className="sanctuary-scene-shade" />
+            <div className="sanctuary-embers" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+          </div>
+
+          <div className="sanctuary-content-column">
             <div className="sanctuary-scene-caption">
               <span className="sanctuary-caption-mark" aria-hidden="true">
                 ✦
@@ -301,19 +311,11 @@ export default function SanctuaryPage() {
                 The flame remembers.
               </p>
             </div>
-            <div className="sanctuary-embers" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
-            </div>
-          </div>
 
-          <section
-            className="firekeeper-panel"
-            aria-label="Talk with the Firekeeper"
-          >
+            <section
+              className="firekeeper-panel"
+              aria-label="Talk with the Firekeeper"
+            >
             <header className="firekeeper-header">
               <div className="firekeeper-sigil" aria-hidden="true">
                 Λ
@@ -463,7 +465,8 @@ export default function SanctuaryPage() {
               information from this website.
             </p>
           </section>
-        </section>
+        </div>
+      </section>
         <footer className="sanctuary-footer">
           <a href="/#world">← RETURN TO THE WORLD</a>
           <span>APRAMAYA · SPARKS CLUB · NMIT MCA</span>
