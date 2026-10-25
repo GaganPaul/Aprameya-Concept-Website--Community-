@@ -3,6 +3,7 @@ import BonfireFallback from "./components/BonfireFallback"
 import EmberCursor from "./components/EmberCursor"
 import EmberHall from "./components/game/EmberHall"
 import EmberHunt from "./components/game/EmberHunt"
+import FirekeeperCompanion from "./components/FirekeeperCompanion"
 import SanctuaryPage from "./components/sanctuary/SanctuaryPage"
 import SiteNavigation from "./components/SiteNavigation"
 import { useMusicController } from "./audio/useMusicController"
@@ -401,6 +402,8 @@ function Site({ musicController }: { musicController: ReturnType<typeof useMusic
         <p>Hosted by Sparks Club · NMIT MCA Department</p>
         <p>48 hours. One shared fire.</p>
       </footer>
+      {/* Firekeeper companion — only rendered on non-Sanctuary pages */}
+      <FirekeeperCompanion />
     </main>
   )
 }
