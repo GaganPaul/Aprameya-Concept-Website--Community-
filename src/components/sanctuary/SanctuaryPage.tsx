@@ -5,6 +5,7 @@ import {
   askFirekeeperGuide,
   type GuideMessage,
 } from "../../services/firekeeperGuide"
+import type { MusicController } from "../../audio/useMusicController"
 import "./sanctuary.css"
 
 type CharacterState = "idle" | "greeting" | "listening" | "thinking" | "responding" | "farewell"
@@ -48,7 +49,11 @@ const greeting: GuideMessage = {
 const characterAsset = (state: CharacterState) =>
   `/assets/sanctuary/firekeeper/firekeeper-${state}`
 
-export default function SanctuaryPage() {
+export default function SanctuaryPage({
+  musicController,
+}: {
+  musicController?: Pick<MusicController, "muted" | "playing" | "toggleMute" | "currentTrack">
+}) {
   const [messages, setMessages] = useState<GuideMessage[]>([greeting])
   const [draft, setDraft] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -240,6 +245,7 @@ export default function SanctuaryPage() {
         activeSection="sanctuary"
         embers={embers}
         sanctuaryRoute
+        musicController={musicController}
       />
       <div id="sanctuary-main" className="sanctuary-main">
         <section

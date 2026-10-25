@@ -5,6 +5,7 @@ import EmberHall from "./components/game/EmberHall"
 import EmberHunt from "./components/game/EmberHunt"
 import SanctuaryPage from "./components/sanctuary/SanctuaryPage"
 import SiteNavigation from "./components/SiteNavigation"
+import { useMusicController } from "./audio/useMusicController"
 import "./bonfire.css"
 import { PERSONAL_BEST_KEY } from "./game/maze"
 
@@ -320,6 +321,17 @@ function Bonfire() {
 }
 
 export default function App() {
+  const isSanctuary = location.pathname.replace(/\/$/, "") === "/sanctuary"
+  const music = useMusicController(location.pathname)
+
+  // Keep music controller in sync when the pathname changes (e.g. navigating
+  // from the main site to /sanctuary via a full page load — the controller
+  // initialises from the current pathname so this is mainly a safety call).
+  useEffect(() => {
+    music.onPathChange(location.pathname)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname])
+
   if (
     import.meta.env.DEV &&
     new URLSearchParams(location.search).has("bonfire-preview") &&
@@ -331,13 +343,13 @@ export default function App() {
       </Suspense>
     )
   }
-  if (location.pathname.replace(/\/$/, "") === "/sanctuary") {
-    return <SanctuaryPage />
+  if (isSanctuary) {
+    return <SanctuaryPage musicController={music} />
   }
-  return <Site />
+  return <Site musicController={music} />
 }
 
-function Site() {
+function Site({ musicController }: { musicController: ReturnType<typeof useMusicController> }) {
   const [page, setPage] = useState<Page>(() => {
     const hash = location.hash.slice(1) as Page
     return pageNames.includes(hash) ? hash : "world"
@@ -370,7 +382,7 @@ function Site() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <SiteNavigation activeSection={page} embers={embers} />
+      <SiteNavigation activeSection={page} embers={embers} musicController={musicController} />
       {page === "world" ? (
         <Home
           onEarn={earn}

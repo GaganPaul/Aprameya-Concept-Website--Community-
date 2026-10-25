@@ -1,4 +1,6 @@
 import { useState } from "react"
+import MusicControl from "./MusicControl"
+import type { MusicController } from "../audio/useMusicController"
 
 type NavigationSection = "world" | "quest" | "journey" | "arsenal" | "about" | "sanctuary"
 type NavigationItem = {
@@ -15,15 +17,19 @@ const navigationItems: NavigationItem[] = [
   { id: "about", label: "ABOUT US" },
 ]
 
+type Props = {
+  activeSection: NavigationSection
+  embers: number
+  sanctuaryRoute?: boolean
+  musicController?: Pick<MusicController, "muted" | "playing" | "toggleMute" | "currentTrack">
+}
+
 export default function SiteNavigation({
   activeSection,
   embers,
   sanctuaryRoute = false,
-}: {
-  activeSection: NavigationSection
-  embers: number
-  sanctuaryRoute?: boolean
-}) {
+  musicController,
+}: Props) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -67,6 +73,9 @@ export default function SiteNavigation({
       <div className="ember-count">
         <i /> {embers} EMBERS
       </div>
+      {musicController && (
+        <MusicControl {...musicController} />
+      )}
     </header>
   )
 }

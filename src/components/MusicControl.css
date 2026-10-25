@@ -1,0 +1,229 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   MusicControl.css
+   Compact music toggle + attribution tooltip for the Aprameya nav header.
+   All custom properties fall back to the site's global tokens from index.css.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Wrapper ──────────────────────────────────────────────────────────────── */
+.music-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Toggle button ────────────────────────────────────────────────────────── */
+.music-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(216, 173, 98, 0.28); /* var(--line) */
+  border-radius: 0; /* square — matches the site's angular aesthetic */
+  color: #a69b8b; /* var(--muted) */
+  cursor: pointer;
+  transition:
+    color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.music-btn:hover,
+.music-btn:focus-visible {
+  color: var(--gold, #d8ad62);
+  border-color: rgba(216, 173, 98, 0.6);
+  background: rgba(216, 173, 98, 0.06);
+  box-shadow: 0 0 14px rgba(216, 173, 98, 0.18);
+}
+
+/* Playing state: stronger gold tint */
+.music-btn--playing {
+  color: var(--gold, #d8ad62);
+  border-color: rgba(216, 173, 98, 0.5);
+}
+
+.music-btn--playing:hover,
+.music-btn--playing:focus-visible {
+  box-shadow: 0 0 18px rgba(216, 173, 98, 0.28);
+}
+
+/* Keyboard focus ring */
+.music-btn:focus-visible {
+  outline: 2px solid var(--ember-highlight, #ffb454);
+  outline-offset: 2px;
+}
+
+/* ── Icon ─────────────────────────────────────────────────────────────────── */
+.music-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Subtle breathing animation for the icon when music is playing */
+@media (prefers-reduced-motion: no-preference) {
+  .music-btn--playing .music-icon {
+    animation: musicPulse 2.6s ease-in-out infinite;
+  }
+}
+
+@keyframes musicPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+/* ── Screen-reader only ───────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Tooltip ──────────────────────────────────────────────────────────────── */
+.music-tooltip {
+  position: absolute;
+  /* Anchor to bottom-right of the button — opens downward */
+  top: calc(100% + 0.55rem);
+  right: 0;
+  z-index: 100;
+
+  min-width: 13rem;
+  padding: 0.75rem 0.9rem;
+
+  background: rgba(13, 12, 10, 0.96);
+  border: 1px solid rgba(216, 173, 98, 0.32);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(216, 173, 98, 0.06) inset;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+
+  font-family: var(--font-body, "Manrope", sans-serif);
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  color: #c8bfb1; /* var(--ash) */
+
+  /* Ensure it never covers the button on narrow viewports */
+  white-space: nowrap;
+}
+
+/* Small arrow pointing up toward the button */
+.music-tooltip::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: 0.72rem;
+  width: 8px;
+  height: 8px;
+  background: rgba(13, 12, 10, 0.96);
+  border-top: 1px solid rgba(216, 173, 98, 0.32);
+  border-left: 1px solid rgba(216, 173, 98, 0.32);
+  transform: rotate(45deg);
+}
+
+.music-tooltip--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ── Tooltip internals ────────────────────────────────────────────────────── */
+.music-tooltip__action {
+  display: block;
+  text-transform: uppercase;
+  color: var(--bone, #f5f0e8);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  font-size: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.music-tooltip__track {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+  border-top: 1px solid rgba(216, 173, 98, 0.16);
+  padding-top: 0.45rem;
+}
+
+.music-tooltip__label {
+  color: var(--gold, #d8ad62);
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+
+.music-tooltip__title {
+  color: var(--ash, #c8bfb1);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-tooltip__credit {
+  display: block;
+  color: var(--gold, #d8ad62);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  margin-top: 0.2rem;
+  transition: color 0.18s ease;
+}
+
+.music-tooltip__credit:hover,
+.music-tooltip__credit:focus {
+  color: var(--bone, #f5f0e8);
+  text-decoration: underline;
+}
+
+.music-tooltip__credit:focus-visible {
+  outline: 1px solid var(--ember-highlight, #ffb454);
+  outline-offset: 2px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .music-tooltip {
+    /* On narrow viewports, anchor left instead of right
+       so the tooltip doesn't overflow off-screen */
+    right: auto;
+    left: 0;
+  }
+
+  .music-tooltip::before {
+    right: auto;
+    left: 0.72rem;
+  }
+}
+
+/* Respect reduced motion — disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  .music-btn--playing .music-icon {
+    animation: none;
+  }
+  .music-tooltip {
+    transition: none;
+  }
+}
