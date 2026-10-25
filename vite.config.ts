@@ -7,6 +7,24 @@ import path from 'node:path'
 import siteConfiguration from './.figma/make/site.json'
 
 
+function sanctuaryRoutePrerenderPlugin(): Plugin {
+  return {
+    name: 'sanctuary-route-prerender',
+    closeBundle() {
+      const distDir = path.resolve(__dirname, 'dist')
+      const indexHtml = path.join(distDir, 'index.html')
+      if (fs.existsSync(indexHtml)) {
+        const sanctuaryDir = path.join(distDir, 'sanctuary')
+        if (!fs.existsSync(sanctuaryDir)) {
+          fs.mkdirSync(sanctuaryDir, { recursive: true })
+        }
+        fs.copyFileSync(indexHtml, path.join(sanctuaryDir, 'index.html'))
+        fs.copyFileSync(indexHtml, path.join(distDir, 'sanctuary.html'))
+      }
+    },
+  }
+}
+
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
@@ -26,6 +44,7 @@ react(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
       figmaLinkedPackageSourcemaps(),
+      sanctuaryRoutePrerenderPlugin(),
     ],
     resolve: {
       alias: {
