@@ -1,0 +1,901 @@
+.sanctuary-app {
+  min-height: 100vh;
+  background: #0b0a09;
+}
+
+.sanctuary-main {
+  padding-top: 5.75rem;
+}
+
+.sanctuary-experience {
+  position: relative;
+  height: max(45rem, calc(100svh - 5.75rem));
+  min-height: min(54rem, calc(100svh - 5.75rem));
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 40% 56%, rgba(126, 83, 39, 0.14), transparent 54%),
+    #0b0a09;
+}
+
+.sanctuary-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(196, 125, 57, 0.16), transparent 42%),
+    linear-gradient(180deg, #17130f, #090908 83%);
+}
+
+.sanctuary-scene-backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: -1.5rem;
+  background:
+    linear-gradient(90deg, rgba(8, 8, 7, 0.34), rgba(8, 8, 7, 0.12) 45%, rgba(11, 10, 9, 0.56)),
+    linear-gradient(0deg, #0b0a09 0%, transparent 30%, rgba(8, 8, 7, 0.32)),
+    url("/assets/uploads/0bf2e969-d240-4d38-bb67-13b9e49cf86c.png") center / cover;
+  filter: saturate(0.48) brightness(0.45);
+  transform: translate3d(var(--backdrop-x, 0px), var(--backdrop-y, 0px), 0) scale(1.04);
+  transition: filter 900ms ease;
+  will-change: transform;
+}
+
+.sanctuary-ambient-light {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(
+      ellipse at var(--light-x, 39%) var(--light-y, 44%),
+      rgba(209, 153, 79, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(90deg, transparent 30%, rgba(10, 9, 8, 0.15) 58%, rgba(10, 9, 8, 0.38));
+  pointer-events: none;
+  transition: background 700ms ease;
+}
+
+.sanctuary-character-stage {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  place-items: end start;
+  perspective: 1100px;
+  pointer-events: none;
+}
+
+.sanctuary-character-pose {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: auto;
+  height: 100%;
+  inset: 0;
+  display: grid;
+  place-items: end center;
+  width: min(62vw, 52rem);
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(0.99);
+  transform-origin: 42% 100%;
+  transition:
+    opacity 420ms ease,
+    transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.sanctuary-character-pose.active {
+  opacity: 1;
+  transform: translate3d(var(--character-x, 0px), var(--character-y, 0px), 0) scale(1);
+}
+
+.sanctuary-character-pose img {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: saturate(0.82) contrast(1.04) drop-shadow(0 1rem 3rem rgba(0, 0, 0, 0.58));
+}
+
+.sanctuary-experience[data-character-state="idle"] .sanctuary-character-pose.active img {
+  animation: firekeeperIdleBreath 6.8s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+@keyframes firekeeperIdleBreath {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: saturate(0.82) contrast(1.04) drop-shadow(0 1rem 3rem rgba(0, 0, 0, 0.58));
+  }
+  50% {
+    transform: translate3d(0, -4px, 0) scale(1.008);
+    filter: saturate(0.86) contrast(1.045) drop-shadow(0 1.05rem 3.1rem rgba(0, 0, 0, 0.54));
+  }
+}
+
+.sanctuary-experience[data-character-state="thinking"] .sanctuary-ambient-light {
+  background:
+    radial-gradient(
+      ellipse at var(--light-x, 39%) var(--light-y, 44%),
+      rgba(209, 153, 79, 0.21),
+      transparent 39%
+    ),
+    linear-gradient(90deg, transparent 30%, rgba(10, 9, 8, 0.15) 58%, rgba(10, 9, 8, 0.38));
+}
+
+.sanctuary-experience[data-character-state="farewell"] .sanctuary-scene-backdrop {
+  filter: saturate(0.38) brightness(0.38);
+}
+
+.sanctuary-scene-shade {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(11, 10, 9, 0.04) 0%, transparent 28%, rgba(11, 10, 9, 0.12) 52%, rgba(11, 10, 9, 0.72) 100%),
+    linear-gradient(0deg, rgba(11, 10, 9, 0.75), transparent 24% 70%, rgba(11, 10, 9, 0.16));
+  pointer-events: none;
+}
+
+.sanctuary-scene-caption {
+  position: absolute;
+  z-index: 4;
+  top: clamp(1.5rem, 3vh, 2.3rem);
+  right: clamp(1.5rem, 5vw, 5rem);
+  left: auto;
+  width: min(38rem, 43vw);
+  pointer-events: none;
+  text-align: center;
+}
+
+.sanctuary-caption-mark {
+  display: none;
+  margin-bottom: 0.35rem;
+  color: var(--gold);
+  font-size: 1rem;
+  text-shadow: 0 0 1.5rem rgba(216, 173, 98, 0.65);
+}
+
+.sanctuary-scene-caption .eyebrow {
+  margin: 0 0 0.35rem;
+  color: #d0b57f;
+  font-size: 0.65rem;
+  letter-spacing: 0.19em;
+}
+
+.sanctuary-scene-caption h1 {
+  color: #f5f0e8;
+  font-size: clamp(2.5rem, 4.2vw, 3.8rem);
+  letter-spacing: -0.045em;
+  text-shadow: 0 0.15rem 1.25rem rgba(0, 0, 0, 0.78);
+  text-wrap: balance;
+}
+
+.sanctuary-scene-caption h1 em {
+  color: var(--gold);
+}
+
+.sanctuary-scene-caption > p:last-child {
+  margin: 0.4rem 0 0;
+  color: rgba(245, 240, 232, 0.84);
+  font-size: 0.78rem;
+  letter-spacing: 0.035em;
+  line-height: 1.65;
+  text-shadow: 0 1px 0.8rem rgba(0, 0, 0, 0.86);
+}
+
+.sanctuary-embers {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sanctuary-embers i {
+  position: absolute;
+  bottom: -0.4rem;
+  left: var(--ember-x);
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #d8ad62;
+  box-shadow: 0 0 0.65rem 1px rgba(216, 173, 98, 0.32);
+  animation: sanctuaryEmberRise var(--ember-duration) ease-in infinite;
+  animation-delay: var(--ember-delay);
+}
+
+.sanctuary-embers i:nth-child(1) {
+  --ember-x: 19%;
+  --ember-duration: 12s;
+  --ember-delay: -5s;
+}
+
+.sanctuary-embers i:nth-child(2) {
+  --ember-x: 43%;
+  --ember-duration: 15s;
+  --ember-delay: -11s;
+}
+
+.sanctuary-embers i:nth-child(3) {
+  --ember-x: 67%;
+  --ember-duration: 13s;
+  --ember-delay: -3s;
+}
+
+.sanctuary-embers i:nth-child(4) {
+  --ember-x: 78%;
+  --ember-duration: 17s;
+  --ember-delay: -8s;
+}
+
+.sanctuary-embers i:nth-child(5) {
+  --ember-x: 31%;
+  --ember-duration: 16s;
+  --ember-delay: -13s;
+}
+
+@keyframes sanctuaryEmberRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  12% {
+    opacity: 0.64;
+  }
+  82% {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(1.4rem, -34rem, 0);
+  }
+}
+
+.sanctuary-portrait-fallback {
+  position: absolute;
+  inset: auto auto 4rem 8%;
+  z-index: 2;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  width: min(32rem, 38vw);
+  min-height: 28rem;
+  padding: 3rem;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(183, 124, 59, 0.16), transparent 33%),
+    linear-gradient(180deg, transparent, #0b0a09);
+  color: var(--gold);
+  text-align: center;
+}
+
+.sanctuary-portrait-fallback span {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+}
+
+.sanctuary-portrait-fallback p {
+  color: var(--ash);
+}
+
+.firekeeper-panel {
+  position: absolute;
+  z-index: 6;
+  top: 50%;
+  right: clamp(1.25rem, 4.5vw, 4.5rem);
+  display: flex;
+  width: min(39rem, 43vw);
+  min-width: 0;
+  height: min(43rem, 76%);
+  min-height: 32rem;
+  flex-direction: column;
+  padding: clamp(1.25rem, 2.4vw, 2.1rem);
+  border: 1px solid rgba(184, 154, 98, 0.18);
+  background:
+    linear-gradient(145deg, rgba(25, 23, 19, 0.78), rgba(13, 13, 12, 0.76)),
+    rgba(13, 13, 12, 0.76);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  transform: translateY(-50%);
+}
+
+.firekeeper-header {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid rgba(184, 154, 98, 0.16);
+}
+
+.firekeeper-sigil {
+  display: grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  border: 1px solid rgba(184, 154, 98, 0.34);
+  border-radius: 50%;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+.firekeeper-header .eyebrow {
+  margin: 0 0 0.05rem;
+  color: #b49a6b;
+  font-size: 0.58rem;
+  letter-spacing: 0.17em;
+}
+
+.firekeeper-header h2 {
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  letter-spacing: -0.015em;
+}
+
+.firekeeper-subtitle {
+  margin: 0.12rem 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.guide-mode {
+  padding: 0.38rem 0.55rem;
+  border: 1px solid rgba(184, 154, 98, 0.18);
+  color: #c0a876;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.firekeeper-end {
+  justify-self: end;
+  padding: 0.45rem 0.58rem;
+  border: 1px solid rgba(184, 154, 98, 0.16);
+  background: rgba(8, 8, 7, 0.22);
+  color: #b7a98e;
+  cursor: pointer;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.firekeeper-end:hover:not(:disabled) {
+  border-color: rgba(184, 154, 98, 0.42);
+  color: var(--bone);
+}
+
+.firekeeper-end:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.firekeeper-conversation {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.4rem 0.2rem 1rem 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(184, 154, 98, 0.32) transparent;
+  scrollbar-width: thin;
+}
+
+.firekeeper-farewell {
+  display: grid;
+  justify-items: start;
+  gap: 0.65rem;
+  margin: auto 0;
+  padding: 1.2rem 0 1.2rem 2.35rem;
+  animation: firekeeperMessageIn 300ms ease-out both;
+}
+
+.firekeeper-farewell .eyebrow {
+  margin: 0;
+  font-size: 0.64rem;
+  letter-spacing: 0.15em;
+}
+
+.firekeeper-farewell p {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--ash);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.firekeeper-farewell button {
+  min-height: 2.6rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(184, 154, 98, 0.3);
+  background: rgba(184, 154, 98, 0.08);
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+.firekeeper-message {
+  display: flex;
+  max-width: 92%;
+  align-items: flex-start;
+  gap: 0.65rem;
+  animation: firekeeperMessageIn 260ms ease-out both;
+}
+
+.firekeeper-message p {
+  margin: 0;
+  padding: 0.95rem 1rem;
+  color: rgba(245, 240, 232, 0.88);
+  font-size: 0.88rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.firekeeper-message.assistant p {
+  border: 1px solid rgba(184, 154, 98, 0.12);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.firekeeper-message.user {
+  align-self: flex-end;
+}
+
+.firekeeper-message.user p {
+  border: 1px solid rgba(184, 154, 98, 0.18);
+  background: rgba(184, 154, 98, 0.09);
+  color: var(--bone);
+}
+
+.message-sigil {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(184, 154, 98, 0.25);
+  border-radius: 50%;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+}
+
+@keyframes firekeeperMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.firekeeper-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-left: 2.35rem;
+}
+
+.firekeeper-suggestions button {
+  display: inline-flex;
+  min-height: 2.3rem;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.48rem 0.68rem;
+  border: 1px solid rgba(184, 154, 98, 0.2);
+  background: rgba(8, 8, 7, 0.32);
+  color: #d0c7b8;
+  cursor: pointer;
+  font-size: 0.7rem;
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.firekeeper-suggestions button span {
+  color: var(--gold);
+}
+
+.firekeeper-suggestions button:hover:not(:disabled) {
+  border-color: rgba(184, 154, 98, 0.55);
+  background: rgba(184, 154, 98, 0.08);
+  color: var(--bone);
+}
+
+.firekeeper-suggestions button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.firekeeper-thinking {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0 2.35rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.firekeeper-thinking > span {
+  display: inline-flex;
+  gap: 0.22rem;
+}
+
+.firekeeper-thinking i {
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: firekeeperThinking 900ms ease-in-out infinite alternate;
+}
+
+.firekeeper-thinking i:nth-child(2) {
+  animation-delay: 160ms;
+}
+
+.firekeeper-thinking i:nth-child(3) {
+  animation-delay: 320ms;
+}
+
+@keyframes firekeeperThinking {
+  to {
+    opacity: 0.3;
+    transform: translateY(-0.15rem);
+  }
+}
+
+.firekeeper-error {
+  margin-left: 2.35rem;
+  padding: 0.8rem;
+  border-left: 2px solid #a86a4d;
+  background: rgba(168, 106, 77, 0.08);
+}
+
+.firekeeper-error p {
+  margin: 0 0 0.55rem;
+  color: #ddc9bd;
+  font-size: 0.8rem;
+}
+
+.firekeeper-error button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.firekeeper-form {
+  display: grid;
+  min-height: 3.35rem;
+  grid-template-columns: minmax(0, 1fr) 2.8rem;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.85rem;
+  border: 1px solid rgba(184, 154, 98, 0.28);
+  background: rgba(8, 8, 7, 0.56);
+}
+
+.firekeeper-form:focus-within {
+  border-color: rgba(184, 154, 98, 0.64);
+  box-shadow: 0 0 0 2px rgba(184, 154, 98, 0.08);
+}
+
+.firekeeper-form textarea {
+  width: 100%;
+  min-height: 2.1rem;
+  max-height: 6rem;
+  resize: vertical;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--bone);
+  font: inherit;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+
+.firekeeper-form textarea::placeholder {
+  color: #91897c;
+}
+
+.firekeeper-send {
+  display: grid;
+  width: 2.55rem;
+  height: 2.55rem;
+  place-items: center;
+  border: 1px solid rgba(184, 154, 98, 0.26);
+  background: rgba(184, 154, 98, 0.12);
+  color: #d4b476;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.firekeeper-send svg {
+  width: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.firekeeper-send:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(184, 154, 98, 0.22);
+  color: var(--bone);
+}
+
+.firekeeper-send:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.firekeeper-disclaimer {
+  margin: 0.65rem 0 0;
+  color: #928b7e;
+  font-size: 0.65rem;
+  line-height: 1.55;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sanctuary-footer {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1.25rem, 4vw, 4rem);
+  border-top: 1px solid rgba(184, 154, 98, 0.12);
+  color: var(--muted);
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+}
+
+.sanctuary-footer a {
+  color: #c5aa77;
+}
+
+.sanctuary-footer a:hover {
+  color: var(--bone);
+}
+
+.sanctuary-app :where(a, button, textarea):focus-visible {
+  outline: 2px solid #c6a66e;
+  outline-offset: 3px;
+}
+
+@media (max-width: 1050px) {
+  .firekeeper-panel {
+    top: 54%;
+    right: 1.25rem;
+    width: min(45vw, 35rem);
+    height: min(37rem, 70%);
+    min-height: 28rem;
+    padding: 1.25rem;
+  }
+
+  .firekeeper-header {
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+  }
+
+  .firekeeper-end {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .firekeeper-sigil {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+
+  .guide-mode {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .sanctuary-scene-caption {
+    top: 1.2rem;
+    right: 1.25rem;
+    width: min(43vw, 34rem);
+  }
+
+  .sanctuary-scene-caption h1 {
+    font-size: clamp(2.35rem, 4.4vw, 3.2rem);
+  }
+
+  .sanctuary-character-pose {
+    width: min(64vw, 46rem);
+  }
+}
+
+@media (max-width: 760px) {
+  .sanctuary-main {
+    padding-top: 4.75rem;
+  }
+
+  .sanctuary-experience {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 0 1.25rem;
+    overflow: visible;
+    height: auto;
+    min-height: 0;
+  }
+
+  .sanctuary-scene {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: clamp(33rem, 66svh, 42rem);
+    min-height: 0;
+  }
+
+  .sanctuary-scene-backdrop {
+    background-position: center 38%;
+  }
+
+  .sanctuary-character-stage {
+    inset: 8.5rem 0 0;
+  }
+
+  .sanctuary-character-pose {
+    inset: 0;
+    left: 50%;
+    right: auto;
+    width: min(78vw, 28rem);
+    height: 100%;
+    transform: translate3d(-50%, 0, 0) scale(0.99);
+  }
+
+  .sanctuary-character-pose.active {
+    transform: translate3d(calc(-50% + var(--character-x, 0px)), var(--character-y, 0px), 0) scale(1);
+  }
+
+  .sanctuary-scene-shade {
+    background:
+      linear-gradient(0deg, #0b0a09 0%, rgba(11, 10, 9, 0.12) 38%, rgba(11, 10, 9, 0.04) 68%, #0b0a09 100%),
+      linear-gradient(90deg, rgba(11, 10, 9, 0.16), transparent 45%, rgba(11, 10, 9, 0.12));
+  }
+
+  .sanctuary-scene-caption {
+    top: 1.15rem;
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+    text-align: center;
+  }
+
+  .sanctuary-scene-caption h1 {
+    font-size: clamp(2.35rem, 10vw, 3.25rem);
+  }
+
+  .sanctuary-scene-caption > p:last-child {
+    margin-top: 0.2rem;
+    font-size: 0.74rem;
+  }
+
+  .firekeeper-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: calc(100% - 2rem);
+    max-width: 42rem;
+    min-height: 34rem;
+    height: 35rem;
+    align-self: stretch;
+    margin: -0.25rem auto 0;
+    padding: 1.1rem;
+    background: linear-gradient(145deg, rgba(31, 29, 25, 0.97), rgba(13, 13, 12, 0.98));
+    transform: none;
+  }
+
+  .firekeeper-conversation {
+    min-height: 18rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .sanctuary-scene {
+    height: clamp(32rem, 64svh, 36rem);
+  }
+
+  .firekeeper-panel {
+    width: calc(100% - 1.25rem);
+    min-height: 34rem;
+    height: 34rem;
+    margin-inline: auto;
+    padding: 0.9rem;
+  }
+
+  .firekeeper-header {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .firekeeper-sigil {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .firekeeper-message p {
+    font-size: 0.82rem;
+  }
+
+  .firekeeper-suggestions {
+    padding-left: 0;
+  }
+
+  .firekeeper-error,
+  .firekeeper-thinking {
+    margin-left: 0;
+  }
+
+  .sanctuary-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 5rem;
+    font-size: 0.58rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sanctuary-embers i,
+  .firekeeper-thinking i,
+  .sanctuary-experience[data-character-state="idle"] .sanctuary-character-pose.active img {
+    animation: none;
+  }
+
+  .sanctuary-character-pose,
+  .sanctuary-character-pose.active,
+  .sanctuary-scene-backdrop {
+    transition: none;
+    transform: none;
+  }
+
+  .firekeeper-message {
+    animation: none;
+  }
+
+  .firekeeper-suggestions button,
+  .firekeeper-send {
+    transition: none;
+  }
+}

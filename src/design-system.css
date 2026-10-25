@@ -1,0 +1,1874 @@
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: var(--font-body);
+    color: var(--bone);
+    background: var(--ink);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.sigil,
+.hero-line,
+.maze-score b,
+dd {
+  font-family: var(--font-display);
+}
+
+.eyebrow {
+  color: var(--ember-highlight);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+}
+
+.new-hero h1,
+.about-hero h1,
+.chapter-title h1 {
+  font-size: clamp(3.5rem, 7.2vw, 7.5rem);
+  line-height: 0.98;
+  letter-spacing: 0.015em;
+}
+
+.new-hero > .hero-tilt {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 220ms ease-out;
+  will-change: transform;
+}
+
+.new-hero .hero-tilt .hero-character {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  mask-image: none;
+  filter: saturate(0.72) contrast(1.08);
+  transform: translateZ(34px) scale(1.06);
+  animation: none;
+}
+
+.hero-tilt::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: "";
+  opacity: 0;
+  background:
+    radial-gradient(
+      circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+      rgba(255, 170, 72, 0.2),
+      transparent 24%
+    ),
+    linear-gradient(115deg, transparent 28%, rgba(255, 216, 160, 0.06) 48%, transparent 68%);
+  mix-blend-mode: screen;
+  transition: opacity 280ms ease;
+}
+
+.hero-tilt:hover::after {
+  opacity: 1;
+}
+
+.new-hero > .hero-depth.back {
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  transform: none;
+  filter: none;
+  background:
+    linear-gradient(90deg, rgba(5, 6, 6, 0.88) 0%, rgba(5, 6, 6, 0.68) 36%, rgba(5, 6, 6, 0.12) 78%),
+    linear-gradient(0deg, rgba(5, 6, 6, 0.62), transparent 55%);
+}
+
+.new-hero > .hero-depth.mist {
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 74% 52%,
+    transparent 0 30%,
+    rgba(170, 178, 168, 0.08) 58%,
+    transparent 78%
+  );
+}
+
+.new-hero h1 {
+  color: #ff9a3c;
+  font-weight: 600;
+  text-shadow: 0 0 30px rgba(242, 140, 40, 0.18);
+}
+
+.ember-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ember-cursor.is-visible {
+  opacity: 1;
+}
+
+.golden-wisp-active,
+.golden-wisp-active * {
+  cursor: none !important;
+}
+
+.ember-cursor-core {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 50%;
+  transform: translate3d(var(--cursor-x, -20px), var(--cursor-y, -20px), 0)
+    translate(-50%, -50%);
+}
+
+.ember-cursor-core {
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 35% 30%, #e7c987 0, #d8ad62 62%, #b88b43 100%);
+  box-shadow:
+    0 0 10px 2px rgba(216, 173, 98, 0.34),
+    0 0 18px 3px rgba(216, 173, 98, 0.14);
+  transition:
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  animation: goldenWispPulse 2.4s ease-in-out infinite;
+}
+
+.ember-wisp-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: #d8ad62;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ember-wisp-particle.is-spawning {
+  animation: goldenWispFade 380ms ease-out forwards;
+}
+
+.ember-wisp-particle-small {
+  width: 2px;
+  height: 2px;
+}
+
+.ember-wisp-particle-large {
+  width: 3px;
+  height: 3px;
+}
+
+.ember-cursor.is-interactive .ember-cursor-core {
+  box-shadow:
+    0 0 12px 3px rgba(216, 173, 98, 0.42),
+    0 0 20px 4px rgba(216, 173, 98, 0.2);
+}
+
+.ember-cursor.is-rekindle .ember-cursor-core {
+  box-shadow:
+    0 0 12px 3px rgba(216, 144, 72, 0.42),
+    0 0 20px 4px rgba(216, 144, 72, 0.2);
+}
+
+.ember-cursor.is-game-control .ember-cursor-core {
+  box-shadow:
+    0 0 12px 3px rgba(216, 173, 98, 0.4),
+    0 0 18px 4px rgba(216, 173, 98, 0.18);
+}
+
+.ember-cursor.is-in-game .ember-wisp-particle {
+  display: none;
+}
+
+@keyframes goldenWispPulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    box-shadow:
+      0 0 9px 2px rgba(216, 173, 98, 0.24),
+      0 0 15px 3px rgba(216, 173, 98, 0.1);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      0 0 14px 4px rgba(216, 173, 98, 0.48),
+      0 0 24px 6px rgba(216, 173, 98, 0.22);
+  }
+}
+
+@keyframes goldenWispFade {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.25);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .ember-cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ember-cursor-core {
+    animation: none;
+  }
+
+  .ember-wisp-particle {
+    display: none;
+  }
+}
+
+.hero-line {
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.45;
+}
+
+.intro,
+.realm-intro > p,
+.boss-heading > p:last-child,
+.bonfire-copy > p:not(.eyebrow),
+.maze-copy > p:not(.eyebrow),
+.about-content > div:last-child > p,
+.chapter-note > p:last-child,
+.chapter-list p,
+.chapter-title > p:last-child,
+.chapter-tile p,
+.card-copy p {
+  color: var(--ash);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.intro {
+  max-width: 36rem;
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+}
+
+.new-hero-copy .eyebrow,
+.new-hero-copy .intro {
+  text-shadow: 0 1px 8px rgba(11, 10, 9, 0.9);
+}
+
+.links {
+  gap: clamp(1rem, 1.7vw, 2rem);
+  color: var(--ash);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+}
+
+.links .active,
+.links a:hover,
+.links a:focus-visible {
+  color: var(--ember-highlight);
+}
+
+.nav.solid {
+  background: rgba(11, 10, 9, 0.94);
+}
+
+.sigil {
+  color: var(--bone);
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+}
+
+.ember-count {
+  color: var(--ember-highlight);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.button {
+  min-height: 3.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+
+.button.primary {
+  border-color: var(--ember-highlight);
+  background: linear-gradient(120deg, #a9441d, #b95722);
+  color: #fffaf3;
+}
+
+.button.primary:hover:not(.disabled) {
+  border-color: var(--ember-highlight);
+  background: linear-gradient(120deg, #963a18, #a9441d);
+  filter: none;
+}
+
+.button.ghost {
+  border-color: rgba(245, 240, 232, 0.38);
+  background: rgba(11, 10, 9, 0.68);
+  color: var(--bone);
+}
+
+.scroll {
+  color: var(--ash);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.boss-card {
+  background: var(--surface);
+  color: var(--bone);
+}
+
+.boss-card > span,
+.chapter-tile span {
+  color: var(--ember-highlight);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.boss-card > h3,
+.chapter-tile h3 {
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-weight: 600;
+}
+
+.boss-card > p,
+.chapter-tile p {
+  font-size: 1rem;
+}
+
+.carousel-controls {
+  color: var(--ember-highlight);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.carousel-controls button,
+.maze-controls button,
+.menu-button,
+.rune-button {
+  color: var(--bone);
+}
+
+.maze-score {
+  color: var(--ember-highlight);
+}
+
+.maze-score span {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.maze-score b {
+  color: var(--ember-highlight);
+  font-size: 2rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 3px solid var(--ember-highlight);
+  outline-offset: 4px;
+}
+
+.maze-shell:focus-visible {
+  border-color: var(--ember-highlight);
+}
+
+.maze-shell {
+  background: var(--surface);
+}
+
+.maze-grid {
+  background: var(--panel);
+}
+
+.maze-controls button {
+  min-height: 2.75rem;
+  border-color: rgba(216, 173, 98, 0.55);
+  background: var(--panel);
+  font-size: 1rem;
+}
+
+.chapter-tile {
+  background: var(--surface);
+}
+
+.chapter-tile span {
+  bottom: 9.5rem;
+}
+
+.chapter-tile h3 {
+  bottom: 6rem;
+}
+
+.chapter-tile p {
+  bottom: 1rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.quest-grid small,
+.chapter-list b {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.journey li p,
+.journey li small,
+.resources span,
+.resources b {
+  color: var(--ash);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.chapter-copy p,
+.chapter-content p,
+.about-content p,
+.final-cta p:not(.eyebrow) {
+  color: var(--ash);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+footer {
+  color: var(--ash);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.reward-prophecy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem 4vw;
+  padding: 4rem 7vw;
+  border-block: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse at 15% 50%, rgba(155, 67, 31, 0.18), transparent 54%),
+    #100e0c;
+}
+
+.reward-prophecy h2,
+.ember-hall h2 {
+  margin-top: 0.55rem;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+.reward-prophecy > div:first-child > p:last-child,
+.reward-prophecy details p,
+.ember-hall-heading > p,
+.season-trust-note,
+.hall-empty p,
+.hall-empty-copy,
+.current-rank-note {
+  max-width: 48rem;
+  color: var(--ash);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.reward-prophecy-actions {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.prophecy-link,
+.badge-profile-link {
+  color: var(--ember-highlight);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.reward-prophecy details {
+  grid-column: 1 / -1;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.reward-prophecy summary {
+  width: fit-content;
+  color: var(--bone);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.reward-prophecy details p {
+  margin-bottom: 0;
+}
+
+.maze-section {
+  align-items: start;
+}
+
+.maze-copy {
+  min-width: 0;
+}
+
+.reward-whisper {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-left: 2px solid var(--ember);
+  background: rgba(242, 140, 40, 0.055);
+}
+
+.reward-whisper > span {
+  color: var(--ember-highlight);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.reward-whisper p,
+.maze-scoring,
+.maze-local-note,
+.maze-keyboard-hint {
+  color: var(--ash);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.reward-whisper a {
+  color: var(--ember-highlight);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.maze-scoring {
+  margin-top: 1.5rem;
+}
+
+.maze-local-note {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.maze-shell {
+  min-width: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.maze-hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding-bottom: 1rem;
+  color: var(--ash);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.maze-hud b {
+  margin-left: 0.25rem;
+  color: var(--ember-highlight);
+  font-variant-numeric: tabular-nums;
+}
+
+.maze-hud b.urgent {
+  color: #ff775d;
+}
+
+.maze-board {
+  position: relative;
+  width: 100%;
+  max-width: 38rem;
+  margin-inline: auto;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border: 1px solid rgba(216, 173, 98, 0.5);
+  background: #100f0d;
+  outline: none;
+  touch-action: manipulation;
+}
+
+.maze-board:focus-visible {
+  outline: 3px solid var(--ember-highlight);
+  outline-offset: 4px;
+}
+
+.maze-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.maze-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: clamp(1rem, 5vw, 3rem);
+  background: rgba(8, 8, 7, 0.87);
+  text-align: center;
+}
+
+.maze-overlay .eyebrow {
+  margin: 0;
+}
+
+.maze-overlay h3 {
+  font-size: clamp(1.15rem, 3vw, 2rem);
+}
+
+.maze-overlay > p:not(.eyebrow) {
+  max-width: 28rem;
+  margin: 0 0 0.5rem;
+  color: var(--ash);
+  font-size: clamp(0.8rem, 1.8vw, 1rem);
+  line-height: 1.6;
+}
+
+.maze-overlay .button {
+  min-height: 44px;
+}
+
+.maze-results {
+  background: rgba(8, 8, 7, 0.93);
+}
+
+.maze-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.maze-result-actions .button {
+  min-height: 44px;
+}
+
+.maze-playbar {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.maze-playbar p {
+  margin: 0.75rem 0;
+  color: var(--ash);
+  font-size: 0.875rem;
+}
+
+.maze-pause {
+  min-height: 44px;
+  padding-inline: 1rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--bone);
+  cursor: pointer;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.maze-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(44px, 3.25rem));
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.25rem auto 0;
+}
+
+.maze-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid rgba(216, 173, 98, 0.55);
+  background: var(--panel);
+  color: var(--bone);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.maze-controls button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.maze-keyboard-hint {
+  margin: 0.8rem 0 0;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+.ember-hall {
+  padding: 7rem 7vw;
+  border-top: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(216, 173, 98, 0.08), transparent 45%),
+    #0b0a09;
+}
+
+.ember-hall-heading {
+  display: grid;
+  grid-template-columns: 1fr minmax(17rem, 0.8fr);
+  align-items: end;
+  gap: 2rem 8vw;
+  margin-bottom: 3rem;
+}
+
+.ember-hall-heading > p {
+  margin-bottom: 0.35rem;
+}
+
+.season-ledger {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--line);
+  background: rgba(20, 18, 16, 0.86);
+}
+
+.season-status-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.season-status-line > span:first-child {
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.season-status-line strong {
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.season-status {
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--line);
+  color: var(--ember-highlight);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.season-finalized {
+  color: #d8ad62;
+}
+
+.season-ended {
+  color: var(--muted);
+}
+
+.hall-refresh {
+  min-height: 40px;
+  margin-left: auto;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--bone);
+  cursor: pointer;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+.hall-refresh:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.season-trust-note {
+  margin: 0.75rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+.hall-empty {
+  padding: 1.75rem;
+  border: 1px solid rgba(216, 173, 98, 0.22);
+  background: rgba(8, 8, 7, 0.55);
+}
+
+.hall-empty strong {
+  color: var(--ember-highlight);
+  font-family: var(--font-display);
+  letter-spacing: 0.07em;
+}
+
+.hall-empty p {
+  margin-bottom: 0;
+}
+
+.hall-error {
+  border-color: rgba(255, 119, 93, 0.5);
+}
+
+.leaderboard-list {
+  display: grid;
+}
+
+.leaderboard-podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.podium-place {
+  display: flex;
+  min-height: 10rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  background: rgba(8, 8, 7, 0.6);
+}
+
+.podium-place > span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+.podium-place strong {
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.podium-place b {
+  color: var(--ember-highlight);
+}
+
+.podium-place-1 {
+  border-color: rgba(255, 204, 114, 0.62);
+  box-shadow: inset 0 2px #ffcc72;
+}
+
+.podium-place-2 {
+  border-color: rgba(217, 222, 223, 0.45);
+  box-shadow: inset 0 2px #aab0b0;
+}
+
+.podium-place-3 {
+  border-color: rgba(215, 149, 96, 0.48);
+  box-shadow: inset 0 2px #bd7547;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 3rem minmax(8rem, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  min-height: 3.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(216, 173, 98, 0.16);
+  color: var(--ash);
+  font-size: 0.875rem;
+}
+
+.leaderboard-row strong {
+  color: var(--bone);
+}
+
+.leaderboard-place {
+  color: var(--muted);
+  font-family: var(--font-display);
+}
+
+.leaderboard-rank-1 .leaderboard-place {
+  color: #ffcc72;
+}
+
+.leaderboard-rank-2 .leaderboard-place {
+  color: #d9dedf;
+}
+
+.leaderboard-rank-3 .leaderboard-place {
+  color: #d79560;
+}
+
+.leaderboard-current {
+  background: rgba(242, 140, 40, 0.08);
+}
+
+.you-label {
+  color: var(--ember-highlight);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+.current-rank-note {
+  margin-bottom: 0;
+}
+
+.hall-of-legends {
+  margin-top: 5rem;
+}
+
+.hall-of-legends h3 {
+  margin-top: 0.5rem;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+}
+
+.hall-empty-copy {
+  margin-top: 1.25rem;
+}
+
+.season-record {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.season-record-title {
+  color: var(--ember-highlight);
+  font-family: var(--font-display);
+}
+
+.champion-card {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.champion-badge {
+  display: block;
+  width: 100%;
+  max-width: 13rem;
+  height: auto;
+}
+
+.champion-card h3 {
+  margin: 0.4rem 0;
+}
+
+.champion-card p:not(.eyebrow) {
+  color: var(--ash);
+}
+
+.champion-card .button {
+  min-height: 44px;
+  margin-top: 0.75rem;
+  cursor: pointer;
+}
+
+.badge-metadata {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.badge-profile-link {
+  display: block;
+  width: fit-content;
+  margin-top: 0.75rem;
+}
+
+button.badge-profile-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.badge-share-status {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--ash);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 800px) {
+
+  .new-hero > .hero-tilt {
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  .new-hero .hero-tilt .hero-character {
+    object-position: 56% center;
+    filter: saturate(0.68) contrast(1.06);
+    transform: scale(1.04);
+  }
+
+  .hero-tilt::after {
+    display: none;
+  }
+
+  .new-hero > .hero-depth.back {
+    background:
+      linear-gradient(90deg, rgba(5, 6, 6, 0.8), rgba(5, 6, 6, 0.36) 72%, rgba(5, 6, 6, 0.18)),
+      linear-gradient(0deg, rgba(5, 6, 6, 0.58), transparent 60%);
+  }
+
+  .new-hero h1,
+  .about-hero h1,
+  .chapter-title h1 {
+    font-size: clamp(2.75rem, 12vw, 3.75rem);
+    line-height: 1;
+  }
+
+  .new-hero-copy {
+    width: calc(100% - 2.6rem);
+  }
+
+  .reward-prophecy {
+    grid-template-columns: 1fr;
+    padding: 3.5rem 1.3rem;
+  }
+
+  #ember-prophecy-details {
+    grid-column: 1;
+  }
+
+  .ember-hall {
+    padding: 5rem 1.3rem;
+  }
+
+  .ember-hall-heading {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .leaderboard-row {
+    grid-template-columns: 2rem minmax(5rem, 1fr) auto;
+  }
+
+  .leaderboard-podium {
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-row > :last-child {
+    grid-column: 2 / -1;
+    font-size: 0.75rem;
+  }
+
+  .champion-card {
+    grid-template-columns: minmax(5rem, 8rem) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .hero-line {
+    max-width: 18ch;
+    font-size: clamp(1.125rem, 5vw, 1.375rem);
+    letter-spacing: 0.07em;
+  }
+
+  .eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+  }
+
+  .links {
+    gap: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .intro,
+  .realm-intro > p,
+  .boss-heading > p:last-child,
+  .bonfire-copy > p:not(.eyebrow),
+  .maze-copy > p:not(.eyebrow),
+  .about-content > div:last-child > p,
+  .chapter-note > p:last-child,
+  .chapter-list p,
+  .chapter-title > p:last-child,
+  .chapter-tile p,
+  .card-copy p {
+    font-size: 1rem;
+  }
+
+  .chapter-tile p {
+    bottom: 1rem;
+  }
+
+  .button {
+    min-height: 3.25rem;
+    padding-inline: 1.1rem;
+    font-size: 0.9375rem;
+    letter-spacing: 0.07em;
+  }
+
+  .scroll {
+    font-size: 0.6875rem;
+  }
+
+  .maze-controls {
+    grid-template-columns: repeat(3, 3.25rem);
+  }
+
+  .maze-controls button {
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .new-hero h1 {
+    font-size: clamp(2.5rem, 12vw, 2.75rem);
+  }
+
+  .actions {
+    gap: 0.65rem;
+  }
+
+  .button {
+    padding-inline: 0.8rem;
+    font-size: 0.875rem;
+  }
+
+  .maze-hud {
+    font-size: 0.65rem;
+  }
+
+  .maze-result-actions {
+    gap: 0.4rem;
+  }
+
+  .maze-result-actions .button {
+    padding-inline: 0.55rem;
+    font-size: 0.7rem;
+  }
+
+  .champion-card {
+    grid-template-columns: 1fr;
+  }
+
+  .champion-badge {
+    max-width: 9rem;
+    margin-inline: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .new-hero > .hero-tilt,
+  .hero-tilt::after {
+    transition: none;
+  }
+
+  .new-hero .hero-tilt .hero-character {
+    transform: none;
+  }
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  h1 {
+    line-height: 0.98;
+  }
+
+  h2 {
+    line-height: 1.04;
+  }
+}
+
+html {
+  scroll-padding-top: 6.5rem;
+}
+
+.nav.solid {
+  height: 5.75rem;
+  min-height: 5.75rem;
+  padding-inline: clamp(1.25rem, 5.5vw, 6rem);
+  border-bottom-color: rgba(216, 173, 98, 0.14);
+  background: rgba(9, 9, 8, 0.3);
+  box-shadow: 0 0.75rem 2.5rem rgba(0, 0, 0, 0.08);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  backdrop-filter: blur(18px) saturate(125%);
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.sigil {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.sigil span {
+  color: var(--gold);
+  text-shadow: 0 0 1.25rem rgba(216, 173, 98, 0.38);
+}
+
+.nav .sigil {
+  position: relative;
+  isolation: isolate;
+  text-shadow: 0 0 1.5rem rgba(235, 126, 52, 0.2);
+}
+
+.nav .sigil::before {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 17rem;
+  height: 5.25rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(185, 75, 30, 0.42) 0%,
+    rgba(143, 55, 24, 0.25) 38%,
+    rgba(112, 46, 22, 0.08) 62%,
+    transparent 76%
+  );
+  content: "";
+  filter: blur(10px);
+  opacity: 0.86;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 220ms ease;
+}
+
+.nav .sigil:hover::before,
+.nav .sigil:focus-visible::before {
+  opacity: 1;
+}
+
+.links {
+  gap: clamp(0.9rem, 1.7vw, 1.8rem);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+.links a {
+  position: relative;
+  padding-block: 0.55rem;
+  transition: color 180ms ease;
+}
+
+.links a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0.15rem;
+  left: 0;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
+.links a.active::after,
+.links a:hover::after,
+.links a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.links .active,
+.links a:hover,
+.links a:focus-visible {
+  color: var(--bone);
+}
+
+.ember-count {
+  padding: 0.48rem 0.72rem;
+  border: 1px solid rgba(216, 173, 98, 0.18);
+  background: rgba(216, 173, 98, 0.045);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.menu-button {
+  min-width: 3.25rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  background: rgba(20, 18, 16, 0.8);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
+
+.new-hero-copy {
+  width: min(48rem, 86%);
+}
+
+.new-hero h1 {
+  margin-top: 0.6rem;
+  font-size: clamp(4.4rem, 9vw, 8.4rem);
+  letter-spacing: 0.025em;
+  text-shadow: 0 0 2.5rem rgba(242, 140, 40, 0.16);
+}
+
+.new-hero-copy > .eyebrow {
+  max-width: 46rem;
+  letter-spacing: 0.16em;
+}
+
+.hero-line {
+  margin-top: 1.2rem;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+}
+
+.intro {
+  max-width: 34rem;
+  margin-block: 1.4rem 1.9rem;
+  color: rgba(245, 240, 232, 0.78);
+  line-height: 1.8;
+}
+
+.actions {
+  gap: 0.8rem;
+}
+
+.button {
+  min-height: 3.25rem;
+  padding-inline: 1.35rem;
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.button.primary {
+  box-shadow: 0 0.55rem 1.8rem rgba(170, 77, 38, 0.15);
+}
+
+.button.primary:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0.75rem 2rem rgba(170, 77, 38, 0.22);
+}
+
+.button.ghost:hover:not(.disabled) {
+  border-color: rgba(216, 173, 98, 0.72);
+  background: rgba(216, 173, 98, 0.08);
+}
+
+.realm-intro {
+  gap: clamp(2rem, 8vw, 8rem);
+  padding: clamp(5.5rem, 9vw, 8rem) clamp(1.4rem, 7vw, 8rem);
+  border-bottom: 1px solid rgba(216, 173, 98, 0.12);
+}
+
+.realm-intro h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.6rem, 5vw, 4.7rem);
+}
+
+.realm-intro > p {
+  max-width: 34rem;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.reward-prophecy {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.4rem, 7vw, 8rem);
+  gap: 2rem clamp(2rem, 7vw, 7rem);
+}
+
+.boss-section {
+  padding: clamp(4rem, 7vh, 6rem) 0 clamp(6rem, 9vw, 9rem);
+}
+
+.boss-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 52rem;
+  margin-inline: auto;
+  padding: 0 1.5rem 2.75rem;
+  text-align: center;
+}
+
+.boss-heading h2 {
+  grid-column: auto;
+  width: min(100%, 12ch);
+  font-size: clamp(3rem, 5.2vw, 4.5rem);
+  line-height: 1;
+  text-align: center;
+}
+
+.boss-heading > .eyebrow {
+  margin: 0;
+  text-align: center;
+}
+
+.boss-heading > p:last-child {
+  max-width: 36rem;
+  margin: 0.1rem 0 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  text-align: center;
+}
+
+.carousel-controls {
+  margin-top: 1.5rem;
+}
+
+.carousel-controls button {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-color: rgba(216, 173, 98, 0.3);
+  background: rgba(20, 18, 16, 0.8);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.carousel-controls button:hover {
+  border-color: var(--gold);
+  background: rgba(216, 173, 98, 0.1);
+  color: var(--gold);
+}
+
+.bonfire-section {
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(5rem, 8vw, 8rem) clamp(1.4rem, 7vw, 8rem);
+  border-block: 1px solid rgba(216, 173, 98, 0.12);
+}
+
+.bonfire-copy h2 {
+  max-width: 10ch;
+  font-size: clamp(2.8rem, 5.8vw, 5rem);
+}
+
+.bonfire-copy > p:not(.eyebrow) {
+  max-width: 35rem;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.maze-section {
+  gap: clamp(2.5rem, 6vw, 6rem);
+  padding: clamp(5rem, 8vw, 8rem) clamp(1.4rem, 7vw, 8rem);
+}
+
+.maze-copy h2 {
+  font-size: clamp(2.7rem, 5.3vw, 4.8rem);
+}
+
+.maze-copy > p:not(.eyebrow) {
+  max-width: 36rem;
+  line-height: 1.85;
+}
+
+.maze-shell,
+.season-ledger,
+.champion-card {
+  border-color: rgba(216, 173, 98, 0.22);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.18);
+}
+
+.ember-hall {
+  padding: clamp(5rem, 8vw, 8rem) clamp(1.4rem, 7vw, 8rem);
+}
+
+.ember-hall-heading {
+  gap: 2rem clamp(2rem, 7vw, 7rem);
+}
+
+.chapter-grid {
+  gap: clamp(0.8rem, 1.5vw, 1.4rem);
+  padding: 0 clamp(1.4rem, 5vw, 5rem) clamp(6rem, 9vw, 9rem);
+}
+
+.chapter-tile {
+  border-color: rgba(216, 173, 98, 0.22);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.2);
+}
+
+.chapter-tile img {
+  transition:
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 500ms ease;
+}
+
+.chapter-grid a:hover .chapter-tile img,
+.chapter-grid a:focus-visible .chapter-tile img {
+  transform: scale(1.035);
+  filter: saturate(0.72) brightness(1.06);
+}
+
+.chapter-tile > div {
+  background: linear-gradient(
+    180deg,
+    rgba(7, 8, 8, 0.02) 15%,
+    rgba(7, 8, 8, 0.28) 42%,
+    rgba(7, 8, 8, 0.94) 100%
+  );
+}
+
+.chapter-tile h3 {
+  font-size: clamp(1.6rem, 2.4vw, 2.25rem);
+}
+
+.chapter-hero {
+  min-height: min(76svh, 58rem);
+  padding: clamp(6rem, 8vw, 8rem);
+}
+
+.chapter-title h1,
+.about-hero h1 {
+  font-size: clamp(4rem, 8.6vw, 8rem);
+}
+
+.chapter-title > p:last-child {
+  max-width: 38rem;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.7;
+}
+
+.about-hero div > p:last-child {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+.chapter-list article > span,
+dl dd {
+  font-family: var(--font-display);
+}
+
+.bonfire-lit-banner span {
+  font-family: var(--font-display);
+}
+
+.back-link {
+  top: 7.5rem;
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--ash);
+  transition: color 180ms ease;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--gold);
+}
+
+.chapter-content,
+.about-content {
+  gap: clamp(2.5rem, 8vw, 8rem);
+  padding: clamp(5rem, 8vw, 8rem) clamp(1.4rem, 7vw, 8rem);
+}
+
+.chapter-note h2,
+.about-content h2 {
+  margin-block: 0.75rem 1.25rem;
+  font-size: clamp(2.6rem, 4.7vw, 4.4rem);
+}
+
+.chapter-list article {
+  gap: 1rem clamp(1rem, 2.2vw, 2rem);
+  padding-block: 1.7rem;
+  border-bottom-color: rgba(216, 173, 98, 0.2);
+}
+
+.chapter-list h3 {
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+}
+
+.chapter-list p {
+  margin-block: 0.45rem 0;
+  line-height: 1.7;
+}
+
+.about-hero {
+  min-height: min(76svh, 58rem);
+}
+
+.about-content > div:last-child > p {
+  max-width: 42rem;
+  margin-top: 0;
+  line-height: 1.85;
+}
+
+.next-path {
+  padding: clamp(5rem, 9vw, 9rem) 1.4rem;
+  border-top: 1px solid rgba(216, 173, 98, 0.12);
+}
+
+.next-path h2 {
+  margin-top: 0.6rem;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+}
+
+footer {
+  min-height: 9rem;
+  padding: 2.5rem clamp(1.4rem, 5.5vw, 6rem);
+  border-top-color: rgba(216, 173, 98, 0.2);
+  background: #090908;
+  font-size: 0.75rem;
+}
+
+footer p {
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .nav.solid {
+    height: 4.75rem;
+    min-height: 4.75rem;
+    padding-inline: 1.2rem;
+  }
+
+  .sigil {
+    font-size: 1.05rem;
+  }
+
+  .links {
+    top: 4.75rem;
+    gap: 0.35rem;
+    padding: 1rem 1.2rem 1.4rem;
+    border-bottom: 1px solid rgba(216, 173, 98, 0.18);
+    background: rgba(9, 9, 8, 0.58);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.16);
+    -webkit-backdrop-filter: blur(22px) saturate(125%);
+    backdrop-filter: blur(22px) saturate(125%);
+  }
+
+  .links a {
+    padding-block: 0.8rem;
+  }
+
+  .nav .sigil::before {
+    width: 14rem;
+    height: 4.5rem;
+  }
+
+  .links a::after {
+    right: auto;
+    width: 2rem;
+  }
+
+  .new-hero {
+    min-height: min(54rem, 100svh);
+  }
+
+  .new-hero-copy {
+    width: calc(100% - 2.6rem);
+    margin-inline: 1.3rem;
+    padding-top: 4rem;
+  }
+
+  .new-hero h1 {
+    font-size: clamp(3.5rem, 15vw, 5.8rem);
+    letter-spacing: 0;
+  }
+
+  .new-hero-copy > .eyebrow {
+    max-width: 28rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.13em;
+  }
+
+  .hero-line {
+    max-width: none;
+    margin-top: 0.8rem;
+    font-size: clamp(1.15rem, 5.2vw, 1.55rem);
+    letter-spacing: 0.065em;
+  }
+
+  .intro {
+    max-width: 31rem;
+  }
+
+  .realm-intro {
+    gap: 1.5rem;
+    padding: 5rem 1.3rem;
+  }
+
+  .realm-intro h2 {
+    font-size: clamp(2.5rem, 10vw, 3.75rem);
+  }
+
+  .boss-section {
+    padding-block: 1rem 5rem;
+  }
+
+  .boss-heading {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 0.8rem;
+    max-width: none;
+    padding: 0 1.3rem 1.5rem;
+    text-align: left;
+  }
+
+  .boss-heading > .eyebrow {
+    justify-self: start;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .boss-heading h2 {
+    grid-column: auto;
+    width: auto;
+    justify-self: start;
+    font-size: clamp(2.7rem, 10vw, 3.8rem);
+    line-height: 0.98;
+    text-align: left;
+  }
+
+  .boss-heading > p:last-child {
+    max-width: 35rem;
+    justify-self: start;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .bonfire-section,
+  .maze-section {
+    gap: 2rem;
+    padding: 5rem 1.3rem;
+  }
+
+  .bonfire-copy h2,
+  .maze-copy h2 {
+    font-size: clamp(2.6rem, 10vw, 3.7rem);
+  }
+
+  .chapter-grid {
+    gap: 0.9rem;
+    padding: 0 1.3rem 5rem;
+  }
+
+  .chapter-tile {
+    height: min(30rem, 78svh);
+  }
+
+  .chapter-hero,
+  .about-hero {
+    min-height: 72svh;
+    padding: 1.3rem 1.3rem 5rem;
+  }
+
+  .chapter-title h1,
+  .about-hero h1 {
+    font-size: clamp(3.4rem, 13vw, 5rem);
+  }
+
+  .back-link {
+    top: 5.4rem;
+    left: 1.3rem;
+  }
+
+  .chapter-content,
+  .about-content {
+    gap: 2.5rem;
+    padding: 5rem 1.3rem;
+  }
+
+  .chapter-note h2,
+  .about-content h2 {
+    font-size: clamp(2.5rem, 9vw, 3.6rem);
+  }
+
+  .chapter-list article {
+    padding-block: 1.35rem;
+  }
+
+  .next-path {
+    padding-block: 5rem;
+  }
+
+  footer {
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 2.5rem 1.3rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .new-hero-copy {
+    padding-top: 2.5rem;
+  }
+
+  .new-hero .actions {
+    gap: 0.6rem;
+  }
+
+  .new-hero .button {
+    min-height: 3rem;
+    padding-inline: 0.85rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
+
+  .ember-count {
+    display: none;
+  }
+
+  .chapter-list article {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links a,
+  .links a::after,
+  .button,
+  .carousel-controls button,
+  .chapter-tile img,
+  .nav.solid,
+  .nav .sigil::before {
+    transition: none;
+  }
+}

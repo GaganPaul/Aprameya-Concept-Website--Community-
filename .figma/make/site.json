@@ -1,0 +1,11 @@
+{
+  "title": "Aprameya NMIT Concept Website",
+  "description": "Explore Apramaya’s 48-hour hackathon, discover challenges, schedules, and participant resources, and find your path to registration in an immersive dark-fantasy experience.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
